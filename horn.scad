@@ -1,14 +1,28 @@
 INCHES = 25.4;
 
-NUMBER = 5;
-DIAMETER = 60;
-HEIGHT = 120;
-TWIST = 0.5;
-DISTANCE = 0.7;
-SCALE = 5/8;
+// Number of colors
+NUMBER = 5; // [2:5]
 
-HOLLOW = false;
-INSIDE_COLOR = 1;
+// Diameter of the base shape
+DIAMETER = 60; // [10:200]
+
+// Height of the object
+HEIGHT = 120; // [20:300]
+
+// Twist in degress
+TWIST = 180; // [0:720]
+
+// Relative displacement of base shapes
+DISTANCE = 0.7; // [0:1]
+
+// Scale of the tip relative to the base
+SCALE = 5/8; // [0:2]
+
+// Should the object be hollow?
+HOLLOW = false; // [true, false]
+
+// If not hollow, What color should the inside have?
+INSIDE_COLOR = 1; // [0:5]
 
 module baseshape(size) {
  circle(size/2);
@@ -56,12 +70,12 @@ module smoother() {
 }
 
 module extrudepart() {
-    linear_extrude(height=HEIGHT, twist=TWIST*360, scale=[SCALE, SCALE], convexity=3) child();
+    linear_extrude(height=HEIGHT, twist=TWIST, scale=[SCALE, SCALE], convexity=3) child();
 }
 
 module basepart(item) {
     extrudepart() baseitem(item);
-    translate([0,0,HEIGHT]) rotate([0,0,TWIST*360])
+    translate([0,0,HEIGHT]) rotate([0,0,TWIST])
      scale(SCALE) rotate([0,0,item*360/NUMBER])
       translate([DIAMETER/2*DISTANCE,0]) 
        sphere(DIAMETER/2);
