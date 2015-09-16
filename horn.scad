@@ -70,16 +70,24 @@ module smoother() {
 }
 
 module extrudepart() {
-    linear_extrude(height=HEIGHT, twist=TWIST, scale=[SCALE, SCALE], convexity=3) child();
+    linear_extrude(height=HEIGHT, twist=TWIST, scale=[SCALE, SCALE], convexity=3) children();
 }
 
 module basepart(item) {
     extrudepart() baseitem(item);
+    toppart(item);
+}
+
+module toppart(item) {
     translate([0,0,HEIGHT]) rotate([0,0,TWIST])
      scale(SCALE) rotate([0,0,item*360/NUMBER])
       translate([DIAMETER/2*DISTANCE,0]) 
-       sphere(DIAMETER/2);
+       difference() {
+         sphere(DIAMETER/2);
+         translate([0,0,-DIAMETER/2]) cube(DIAMETER, center=true);
+       }
 }
+
     
 module part(item) {
     color(COLORS[item%NUM_COLORS]) {
@@ -94,6 +102,9 @@ module part(item) {
 module inside() {
     extrudepart() for (i=[1:NUMBER-1], j=[0:i-1]) {
         intersection() {baseitem(i); baseitem(j);}
+    }
+    for (i=[1:NUMBER-1], j=[0:i-1]) intersection() { 
+      toppart(i); toppart(j);
     }
 }
 
